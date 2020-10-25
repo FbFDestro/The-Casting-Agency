@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, abort, jsonify
+from flask import Flask, request, abort, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from models import setup_db, Movie, Actor, db
@@ -70,12 +70,7 @@ def create_app(test_config=None):
     @app.route('/callback')
     def callback_handling():
 
-        print(res)
-
-        # Store the user information in flask session.
-        return jsonify({
-            'res': res
-        })
+        return render_template('logged.html')
 
     return app
 
