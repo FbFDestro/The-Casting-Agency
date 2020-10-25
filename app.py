@@ -33,18 +33,16 @@ def create_app(test_config=None):
 
     @ app.route('/')
     def get_greeting():
-        excited = os.environ['EXCITED']
-        greeting = "Hello"
-        if excited == 'true':
-            greeting = greeting + "!!!!!"
-        return greeting
+        return render_template("index.html")
 
     @ app.route('/coolkids')
     def be_cool():
         return "Be cool, man, be coooool! You're almost a FSND grad!"
 
+    # Get list of movies
     @ app.route('/movies')
-    def get_movies():
+    @requires_auth('get:movies')
+    def get_movies(jwt):
         """Get all movies route"""
 
         movies = Movie.query.all()
@@ -53,6 +51,22 @@ def create_app(test_config=None):
             'success': True,
             'movies': [movie.format() for movie in movies],
         }), 200
+
+    # Get a movie
+
+    @app.route('/movies/<int:id>')
+    @requires_auth('get:movies')
+    def get_movie_by_id(jwt, id):
+        movie = Movie.query.get(id)
+
+        # return 404 if there is no movie with id
+        if movie is None:
+            abort(404)
+        else:
+            return jsonify({
+                'success': True,
+                'movie': movie.format(),
+            }), 200
 
     # Defines an endpoint that informs the correct url for login
     @ app.route("/authorization/url", methods=["GET"])
@@ -71,6 +85,46 @@ def create_app(test_config=None):
     def callback_handling():
 
         return render_template('logged.html')
+
+       # Error Handling
+
+    @app.errorhandler(422)
+    def unprocessable(error):
+        return jsonify({
+            "success": False,
+            "error": 422,
+            "message": "unprocessable"
+        }), 422
+
+    @app.errorhandler(404)
+    def resource_not_found(error):
+        return jsonify({
+            "success": False,
+            "error": 404,
+            "message": "resource not found"
+        }), 404
+
+    @app.errorhandler(400)
+    def bad_request(error):
+        return jsonify({
+            "success": False,
+            "error": 400,
+            "message": "bad request"
+        }), 400
+
+    @app.errorhandler(500)
+    def internal_server_error(error):
+        return jsonify({
+            "success": False,
+            "error": 500,
+            "message": "internal server error"
+        }), 500
+
+    @app.errorhandler(AuthError)
+    def handle_auth_error(exception):
+        response = jsonify(exception.error)
+        response.status_code = exception.status_code
+        return response
 
     return app
 
