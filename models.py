@@ -72,8 +72,8 @@ class Actor(db.Model):
 
     def __init__(self, name, age, gender):
         self.name = name
-        self.age,
-        self.gender
+        self.age = age,
+        self.gender = gender
 
     def insert(self):
         db.session.add(self)
