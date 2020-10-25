@@ -21,7 +21,7 @@ def create_app(test_config=None):
 
     CORS(app)
 
-    @ app.after_request
+    @app.after_request
     def after_request(response):
 
         response.headers.add('Access-Control-Allow-Headers',
@@ -38,7 +38,6 @@ def create_app(test_config=None):
     #  MOVIES
 
     # Get list of movies
-
     @ app.route('/movies')
     @requires_auth('get:movies')
     def get_movies(jwt):
@@ -67,7 +66,7 @@ def create_app(test_config=None):
             }), 200
 
     # Add a movie
-    @ app.route('/movies', methods=['POST'])
+    @app.route('/movies', methods=['POST'])
     @requires_auth('post:movies')
     def add_movie(jwt):
         data = request.get_json()
@@ -139,7 +138,7 @@ def create_app(test_config=None):
 
     # Defines an endpoint that informs the correct url for login
 
-    @ app.route("/authorization/url", methods=["GET"])
+    @app.route("/authorization/url", methods=["GET"])
     def generate_auth_url():
         url = (f'https://{AUTH0_DOMAIN}/authorize'
                f'?audience={AUTH0_AUDIENCE}'
@@ -149,6 +148,106 @@ def create_app(test_config=None):
         return jsonify({
             'login_url': url
         })
+
+    # Actors
+
+    # Get a list of actors
+    @app.route('/actors')
+    @requires_auth('get:actors')
+    def get_actors(jwt):
+
+        actors = Actor.query.all()
+
+        return jsonify({
+            'success': True,
+            'actors': [actor.format() for actor in actors],
+        }), 200
+
+    # Get an actor by id
+    @app.route('/actors/<int:id>')
+    @requires_auth('get:actors')
+    def get_actor_by_id(jwt, id):
+        actor = Actor.query.get(id)
+
+        if actor is None:
+            abort(404)
+        else:
+            return jsonify({
+                'success': True,
+                'actor': actor.format(),
+            }), 200
+
+    # Add an actor
+    @app.route('/actors', methods=['POST'])
+    @requires_auth('post:actors')
+    def add_actor(jwt):
+
+        data = request.get_json()
+        name = data.get('name', None)
+        age = data.get('age', None)
+        gender = data.get('gender', None)
+
+        actor = Actor(name=name, age=age, gender=gender)
+
+        if name is None or age is None or gender is None:
+            abort(400)
+
+        try:
+            actor.insert()
+            return jsonify({
+                'success': True,
+                'actor': actor.format()
+            }), 201
+        except Exception:
+            abort(500)
+
+    # Update an actor
+    @app.route('/actors/<int:id>', methods=['PATCH'])
+    @requires_auth('patch:actors')
+    def update_actor(jwt, id):
+        data = request.get_json()
+        name = data.get('name', None)
+        age = data.get('age', None)
+        gender = data.get('gender', None)
+
+        actor = Actor.query.get(id)
+
+        if actor is None:
+            abort(404)
+
+        if name is None or age is None or gender is None:
+            abort(400)
+
+        actor.name = name
+        actor.age = age
+        actor.gender = gender
+
+        try:
+            actor.update()
+            return jsonify({
+                'success': True,
+                'actor': actor.format()
+            }), 200
+        except Exception:
+            abort(500)
+
+    # Delete an actor
+    @app.route('/actors/<int:id>', methods=['DELETE'])
+    @requires_auth('delete:actors')
+    def delete_actor(jwt, id):
+        actor = Actor.query.get(id)
+
+        if actor is None:
+            abort(404)
+        try:
+            actor.delete()
+            return jsonify({
+                'success': True,
+                'actor': actor.format()
+            })
+        except Exception:
+            db.session.rollback()
+            abort(500)
 
     # Handles response from token endpoint
     @app.route('/callback')
