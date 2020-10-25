@@ -9,7 +9,18 @@ def create_app(test_config=None):
 
     app = Flask(__name__)
     setup_db(app)
+
     CORS(app)
+
+    @app.after_request
+    def after_request(response):
+
+        response.headers.add('Access-Control-Allow-Headers',
+                             'Content-Type,Authorization,true')
+
+        response.headers.add('Access-Control-Allow-Methods',
+                             'GET,PATCH,POST,DELETE,OPTIONS')
+        return response
 
     @app.route('/')
     def get_greeting():
@@ -22,6 +33,17 @@ def create_app(test_config=None):
     @app.route('/coolkids')
     def be_cool():
         return "Be cool, man, be coooool! You're almost a FSND grad!"
+
+    @app.route('/movies')
+    def get_movies():
+        """Get all movies route"""
+
+        movies = Movie.query.all()
+
+        return jsonify({
+            'success': True,
+            'movies': [movie.format() for movie in movies],
+        }), 200
 
     return app
 
