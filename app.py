@@ -35,11 +35,10 @@ def create_app(test_config=None):
     def get_greeting():
         return render_template("index.html")
 
-    @ app.route('/coolkids')
-    def be_cool():
-        return "Be cool, man, be coooool! You're almost a FSND grad!"
+    #  MOVIES
 
     # Get list of movies
+
     @ app.route('/movies')
     @requires_auth('get:movies')
     def get_movies(jwt):
@@ -53,7 +52,6 @@ def create_app(test_config=None):
         }), 200
 
     # Get a movie
-
     @app.route('/movies/<int:id>')
     @requires_auth('get:movies')
     def get_movie_by_id(jwt, id):
@@ -68,7 +66,79 @@ def create_app(test_config=None):
                 'movie': movie.format(),
             }), 200
 
+    # Add a movie
+    @ app.route('/movies', methods=['POST'])
+    @requires_auth('post:movies')
+    def add_movie(jwt):
+        data = request.get_json()
+        title = data.get('title', None)
+        release_date = data.get('release_date', None)
+
+        # return 400 if title or release date is empty
+        if title is None or release_date is None:
+            abort(400)
+
+        movie = Movie(title=title, release_date=release_date)
+
+        try:
+            movie.insert()
+            return jsonify({
+                'success': True,
+                'movie': movie.format()
+            }), 201
+        except Exception:
+            abort(500)
+
+    # modify a movie
+    @app.route('/movies/<int:id>', methods=['PATCH'])
+    @requires_auth('patch:movies')
+    def update_movie(jwt, id):
+
+        data = request.get_json()
+        title = data.get('title', None)
+        release_date = data.get('release_date', None)
+
+        movie = Movie.query.get(id)
+
+        if movie is None:
+            abort(404)
+
+        if title is None or release_date is None:
+            abort(400)
+
+        movie.title = title
+        movie.release_date = release_date
+
+        try:
+            movie.update()
+            return jsonify({
+                'success': True,
+                'movie': movie.format()
+            })
+        except Exception:
+            abort(500)
+
+    # Delete movie
+    @app.route('/movies/<int:id>', methods=['DELETE'])
+    @requires_auth('delete:movies')
+    def delete_movie(jwt, id):
+        """Delete a movie route"""
+        movie = Movie.query.get(id)
+
+        if movie is None:
+            abort(404)
+        try:
+            movie.delete()
+            return jsonify({
+                'success': True,
+                'movie': movie.format()
+            })
+        except Exception:
+            db.session.rollback()
+            abort(500)
+
     # Defines an endpoint that informs the correct url for login
+
     @ app.route("/authorization/url", methods=["GET"])
     def generate_auth_url():
         url = (f'https://{AUTH0_DOMAIN}/authorize'
