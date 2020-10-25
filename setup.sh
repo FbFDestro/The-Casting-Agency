@@ -1,0 +1,7 @@
+export DATABASE_URL=postgres://nszadcobystzlw:b5a3bc0eb89caf12511568266d1b7068c7b4c7835b1a866405baab88916f7543@ec2-3-214-4-151.compute-1.amazonaws.com:5432/d9noa1n77lm0ab
+export AUTH0_CLIENT_ID=eH9ApoEVliYbgzNZUV7fg5sNswpd7qqs
+export AUTH0_CLIENT_SECRET=rZOJ0xqCSp_ZkEcgUG3ZslpHPQXOvf7GcmUW2hKG8HUc0vWXWEWdwkk8nL5HQ_wq
+export AUTH0_DOMAIN=udacity-shop.auth0.com
+export ENV=development
+export FLASK_APP=app
+export FLASK_DEBUG=True
