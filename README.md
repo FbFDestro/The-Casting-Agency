@@ -4,11 +4,17 @@ Live at: [https://fbfdestro-casting-agency.herokuapp.com/](https://fbfdestro-cas
 
 This is the capstone project for Udacity's Fullstack Nanodegree program and it's a server to a casting agency.
 
+The main motivation behind this project is to use and practice all the concepts and the skills taught in Udacity's course, to build an API from start to finish and host it.
+
+The core concepts that were useful for the development of this project are: database architecture, modeling data objects with SQLAlchemy, developing a Flask API, authentication and Access, Role-Based Access Control, testing and deploying of applications.
+
 The Casting Agency models a company that is responsible for creating movies and managing and assigning actors to those movies. You are an Executive Producer within the company and are creating a system to simplify and streamline your process.
 
 - [Installing Dependencies](#installing-dependencies)
 - [Database Setup](#database-setup)
 - [Testing](#testing)
+- [Role-Based Access Control](#rbac)
+- [Data model](#data-model)
 - [API and Authentication](#api)
 - [Error Handling](#error-handling)
 
@@ -21,6 +27,49 @@ Follow instructions to install the latest version of python for your platform in
 ### Virtual Enviornment
 
 It's recommend working within a virtual environment whenever using Python for projects. This keeps your dependencies for each project separate and organaized. Instructions for setting up a virual enviornment for your platform can be found in the python docs
+[More details about installing and using virtualenv](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/)
+
+#### Installing virualenv
+
+On macOS and Linux:
+
+```
+python3 -m pip install --user virtualenv
+```
+
+On Windows:
+
+```
+py -m pip install --user virtualenv
+```
+
+#### Creating a virtual environment
+
+On macOS and Linux:
+
+```
+python3 -m venv env
+```
+
+On Windows:
+
+```
+py -m venv env
+```
+
+#### Activating a virtual environment
+
+On macOS and Linux:
+
+```
+source env/bin/activate
+```
+
+On Windows:
+
+```
+.\env\Scripts\activate
+```
 
 ### PIP Dependencies
 
@@ -65,6 +114,43 @@ python manage.py db downgrade
 python manage.py db upgrade
 python manage.py seed
 ```
+
+## Data model
+
+- Movies
+
+  - id - (Integer) Primary key
+  - title - (String) Movie title
+  - release_data - (Data) Movie release data
+
+- Actors
+  - id - (Integer) Primary key
+  - name - (String) Actor name
+  - age - (Integer) Actor age
+  - gender - (String) Actor gender
+
+## RBAC
+
+The roles and permission defined on this project are:
+
+- Casting Assistant
+  - get:actors - View actors data
+  - get:movies - View movies data
+- Casting Director
+  - get:actors - View actors data
+  - get:movies - View movies data
+  - post:actors - Add a new actor
+  - delete:actors - Delete an actor
+  - patch:movies - Update a movie
+- Executive Producer
+  - get:actors - View actors data
+  - get:movies - View movies data
+  - post:actors - Add a new actor
+  - patch:actors - Update an actor
+  - delete:actors - Delete an actor
+  - post:movies - Add a movie
+  - patch:movies - Update a movie
+  - delete:movies - Delete a movie
 
 ## API
 
