@@ -9,7 +9,7 @@ The Casting Agency models a company that is responsible for creating movies and 
 - [Installing Dependencies](#installing-dependencies)
 - [Database Setup](#database-setup)
 - [Testing](#testing)
-- [API](#api)
+- [API and Authentication](#api)
 - [Error Handling](#error-handling)
 
 ## Installing Dependencies
