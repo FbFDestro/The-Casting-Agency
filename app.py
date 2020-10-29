@@ -255,8 +255,7 @@ def create_app(test_config=None):
 
         return render_template('logged.html')
 
-       # Error Handling
-
+    # Error Handling
     @app.errorhandler(422)
     def unprocessable(error):
         return jsonify({
