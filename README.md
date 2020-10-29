@@ -163,6 +163,7 @@ One can valid tokens using the given credentials on [https://fbfdestro-casting-a
 - General:
   - Returns all the movies.
   - Roles authorized : Casting Assistant, Casting Director, Executive Producer.
+- Permission required: get:movies
 - Sample: curl http://127.0.0.1:5000/movies
 
 ```
@@ -188,6 +189,7 @@ One can valid tokens using the given credentials on [https://fbfdestro-casting-a
 - General:
   - Get a specific movie.
   - Roles authorized : Casting Assistant, Casting Director, Executive Producer.
+- Permission required: get:movies
 - Sample: curl http://127.0.0.1:5000/movies/1
 
 ```
@@ -206,6 +208,7 @@ One can valid tokens using the given credentials on [https://fbfdestro-casting-a
 - General:
   - Creates a new movie
   - Roles authorized : Executive Producer.
+- Permission required: post:movies
 - Sample: curl http://127.0.0.1:5000/movies -X POST -H "Content-Type: application/json" -d '{ "title": "New Movie", "release_date": "2020-11-11" }'
 
 ```
@@ -224,6 +227,7 @@ One can valid tokens using the given credentials on [https://fbfdestro-casting-a
 - General:
   - Patches a movie
   - Roles authorized : Casting Director, Executive Producer.
+- Permission required: patch:movies
 - Sample: curl http://127.0.0.1:5000/movies/3 -X POST -H "Content-Type: application/json" -d '{ "title": "New title", "release_date": "2020-11-11" }'
 
 ```
@@ -246,6 +250,7 @@ One can valid tokens using the given credentials on [https://fbfdestro-casting-a
   - Deletes a movies by id
   - Roles authorized : Executive Producer.
 
+- Permission required: delete:movies
 - Sample: `curl http://127.0.0.1:5000/movies/3 -X DELETE`
 
 ```
@@ -267,6 +272,7 @@ One can valid tokens using the given credentials on [https://fbfdestro-casting-a
   - Returns all the actors.
   - Roles authorized : Casting Assistant,Casting Director,Executive Producer.
 
+- Permission required: get:actors
 - Sample: `curl http://127.0.0.1:5000/actors`
 
 ```
@@ -296,6 +302,8 @@ One can valid tokens using the given credentials on [https://fbfdestro-casting-a
   - Get a specific actor by id.
   - Roles authorized : Casting Assistant,Casting Director,Executive Producer.
 
+- Permission required: get:actors
+
 - Sample: `curl http://127.0.0.1:5000/actors/1`
 
 ```
@@ -317,6 +325,7 @@ One can valid tokens using the given credentials on [https://fbfdestro-casting-a
   - Creates a new actor
   - Roles authorized : Casting Director,Executive Producer.
 
+- Permission required: post:actors
 - Sample: `curl http://127.0.0.1:5000/actors -X POST -H "Content-Type: application/json" -d '{ "name": "New actor", "age": 22, "gender": "female" }'`
 
 ```
@@ -338,6 +347,7 @@ One can valid tokens using the given credentials on [https://fbfdestro-casting-a
   - Patches an actor
   - Roles authorized : Casting Director, Executive Producer.
 
+- Permission required: patch:actors
 - Sample: `curl http://127.0.0.1:5000/actors/3 -X POST -H "Content-Type: application/json" -d '{ "name": "New actor name", "age": 22, "gender": "female" }'`
 
 ```
@@ -358,6 +368,8 @@ One can valid tokens using the given credentials on [https://fbfdestro-casting-a
 
   - Deletes an actor by id
   - Roles authorized : Casting Director,Executive Producer.
+
+- Permission required: delete:actors
 
 - Sample: `curl http://127.0.0.1:5000/actors/3 -X DELETE`
 
